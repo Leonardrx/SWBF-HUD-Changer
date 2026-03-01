@@ -12,6 +12,7 @@ from tkinter import ttk
 json_path = "rcs/paths.json"
 
 def main_window():
+    
     root3 = tk.Tk()
     root3.title("SWBF2 HUD Changer")
 
@@ -22,7 +23,7 @@ def main_window():
     y = (hs/4)
 
     root3.resizable(False, False)
-
+    
     root3.geometry("600x400+%d+%d" % (x,y))
     root3.configure(bg="#333333")
 
@@ -39,6 +40,7 @@ def main_window():
 
     def mod_dirs(base_path):
 
+        #scans the users addon folder for mod maps that got a ingame.lvl under abc/data/_LVL_PC and returns them
 
         valid_maps = []
 
@@ -65,6 +67,7 @@ def main_window():
 
     def mod_selection():
 
+        #Displays the valid mod maps in a multiple choice listbox
 
         with open(json_path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -109,6 +112,8 @@ def main_window():
 
         def confirm_selection():
 
+            #saves the names of the selected mod maps in the json file
+
             selected_indices = listbox.curselection()
             selected_maps = [listbox.get(i) for i in selected_indices]
 
@@ -131,8 +136,10 @@ def main_window():
                     "ingame.lvl"
                 )
 
+                #backing up the original ingame.lvl files from the selected maps
                 og_mod_dir = os.path.join("og", map)
                 if  not os.path.isdir(og_mod_dir):
+                    
                     os.makedirs(og_mod_dir, exist_ok=True)
 
                     target_file = os.path.join(og_mod_dir, "ingame.lvl")
@@ -144,6 +151,8 @@ def main_window():
         button.pack(pady=5)
 
     def restore_og():
+
+        #reapplies all the ingame.lvl files that were in the users game files before the SWBF HUD Changer made changes to it
 
         with open(json_path, "r") as f:
             data = json.load(f)
@@ -173,6 +182,7 @@ def main_window():
     root3.mainloop()
 
 def hud_window():
+
     root4 = tk.Tk()
     root4.title("SWBF2 HUD Changer")
     ws = root4.winfo_screenwidth()
@@ -201,6 +211,7 @@ def hud_window():
     listbox.place(relx=0.5, rely=0.5, anchor= "center")
 
     def apply_hud():
+
         indices = listbox.curselection()
 
         if not indices:
@@ -365,7 +376,6 @@ def crosshair_window():
 
     root2 = tk.Tk()
 
-    # Set window title and size
     root2.title("SWBF2 HUD Changer")
 
     ws = root2.winfo_screenwidth()
