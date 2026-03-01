@@ -15,7 +15,6 @@ def main_window():
     root3 = tk.Tk()
     root3.title("SWBF2 HUD Changer")
 
-    #center window
     ws = root3.winfo_screenwidth()
     hs = root3.winfo_screenheight() 
 
@@ -40,7 +39,6 @@ def main_window():
 
     def mod_dirs(base_path):
 
-        #listing every mod map from the addon folder that got a ingame.lvl file under data/_LVL_PC
 
         valid_maps = []
 
@@ -67,7 +65,6 @@ def main_window():
 
     def mod_selection():
 
-        #create the listing in a seperat window
 
         with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
