@@ -1,3 +1,5 @@
+#Be aware this code was written by someone that had only minor coding experience beforehand so dont expect it to be good
+
 import tkinter as tk
 from tkinter import *
 from tkinter import filedialog
@@ -228,7 +230,8 @@ def hud_window():
         hud_folder = Path(hud_folder)
         hud_swap_path = os.path.join("hud-files", lang, "1playerhud.hud_")
         hud_transforms_swap_path = os.path.join("hud-files", lang, "hudtransforms.hud_")
-        shutil.copy2(hud_swap_path, '1playerhud.hud_')
+        #copies the Hud files to a different directory otherwise the LVLTool would override the Vanilla files
+        shutil.copy2(hud_swap_path, '1playerhud.hud_')  
         shutil.copy2('og/ingame.lvl', 'ingame.lvl')
 
         for file in hud_folder.iterdir():
@@ -236,21 +239,25 @@ def hud_window():
                 subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-r", "1playerhud.hud_"],creationflags=subprocess.CREATE_NO_WINDOW)
 
             elif file.name == "hudtransforms.hud_":
-                shutil.copy2(hud_transforms_swap_path, 'hudtransforms.hud_')
+                #copies the Hud files zo a different directory otherwise the LVLTool would override the Vanilla files
+                shutil.copy2(hud_transforms_swap_path, 'hudtransforms.hud_') 
                 subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-r", "hudtransforms.hud_"],creationflags=subprocess.CREATE_NO_WINDOW)
                 delete_transforms = "hudtransforms.hud_"
                 os.remove(delete_transforms)
 
             else:
-                subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-a", file],creationflags=subprocess.CREATE_NO_WINDOW)
+                #every .tga file is added and not replaced like the .hud_ files
+                subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-a", file],creationflags=subprocess.CREATE_NO_WINDOW) 
 
+        #copies the applied ingame.lvl to rcs so a different crosshair can be applied to it
         shutil.copy2('ingame.lvl', game_path)
-        shutil.copy2('ingame.lvl', "rcs/ingame.lvl")
+        shutil.copy2('ingame.lvl', "rcs/ingame.lvl") 
         delete_ingame = "ingame.lvl"
         os.remove(delete_ingame)
         gamedata_path = game_path.replace("\\data\\_lvl_pc", "")
         addon_path = os.path.join(gamedata_path, "addon")
 
+        #similar process for the mod maps but just in a loop untill every entry from the json file was applied once
         for name in data.get("mod_maps", []):
             mod_path = os.path.join("og", name, "ingame.lvl")
             shutil.copy2(mod_path, 'ingame.lvl')
@@ -269,7 +276,7 @@ def hud_window():
                     subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-a", file],creationflags=subprocess.CREATE_NO_WINDOW)
 
             game_mod_path = os.path.join(addon_path, name, "data/_LVL_PC")
-            shutil.copy2('ingame.lvl', game_mod_path)
+            shutil.copy2('ingame.lvl', game_mod_path) 
             rcs_mod_dir = os.path.join("rcs", name)
 
             if not os.path.isdir(rcs_mod_dir):
@@ -279,9 +286,9 @@ def hud_window():
             delete_ingame = "ingame.lvl"
             os.remove(delete_ingame)
 
-
+        #deleting every file that was copied into the home directory for use with the LVLTool so keep everything organised
         delete_1playerhud = "1playerhud.hud_"
-        os.remove(delete_1playerhud)
+        os.remove(delete_1playerhud)  
 
     def import_hud():
         hud = filedialog.askdirectory(title= "Select the HUD Folder")
@@ -298,14 +305,14 @@ def hud_window():
 
                 if file.name == "1playerhud.hud":
 
-                    hud_name = Path(file).name
                     shutil.copy2(file, current_dir)
                     subprocess.run(["tools/ConfigMunge.exe", "-inputfile", "1playerhud.hud", "-platform", "pc", "-outputdir", create_hud_dir, "-continue"],creationflags=subprocess.CREATE_NO_WINDOW)
-                        
+                    
+                    #renaming the 1playerhud file otherwise the LVLTool cant replace it and copying it into hud-files to store it
                     create_hud_rename_dir = os.path.join(create_hud_dir, "1playerhud.config")
                     create_hud_rename_path = os.path.join(create_hud_dir, "1playerhud.hud_")
                     create_hud_del_dir = os.path.join(create_hud_dir, "1playerhud.config.req")
-                    os.rename(create_hud_rename_dir, create_hud_rename_path)
+                    os.rename(create_hud_rename_dir, create_hud_rename_path)         
 
                     delete_munge_log = "ConfigMunge.log"
                     delete_config = "1playerhud.hud"
@@ -315,14 +322,14 @@ def hud_window():
 
                 elif file.name == "hudtransforms.hud":
 
-                    hud_name = Path(file).name
                     shutil.copy2(file, current_dir)
                     subprocess.run(["tools/ConfigMunge.exe", "-inputfile", "hudtransforms.hud", "-platform", "pc", "-outputdir", create_hud_dir, "-continue"],creationflags=subprocess.CREATE_NO_WINDOW)
-                        
+                    
+                    #renaming the 1playerhud fileotherwise the LVLTool cant replace it and copying it into hud-files to store it 
                     create_hud_rename_dir = os.path.join(create_hud_dir, "hudtransforms.config")
                     create_hud_rename_path = os.path.join(create_hud_dir, "hudtransforms.hud_")
                     create_hud_del_dir = os.path.join(create_hud_dir, "hudtransforms.config.req")
-                    os.rename(create_hud_rename_dir, create_hud_rename_path)
+                    os.rename(create_hud_rename_dir, create_hud_rename_path)        
 
                     delete_munge_log = "ConfigMunge.log"
                     delete_config = "hudtransforms.hud"
@@ -417,6 +424,7 @@ def crosshair_window():
 
         game_path = data["game_path"]
 
+        #using the rcs ingmae.lvl
         cross_swap_path = os.path.join("crosshairs", lang, "hud_bullseye.texture")
         shutil.copy2(cross_swap_path, 'hud_bullseye.texture')
         shutil.copy2('rcs/ingame.lvl', 'ingame.lvl')
@@ -428,6 +436,7 @@ def crosshair_window():
         gamedata_path = game_path.replace("\\data\\_lvl_pc", "")
         addon_path = os.path.join(gamedata_path, "addon")
 
+        #read the selected mod maps from the json and apply the crosshair to every one of them
         for name in data.get("mod_maps", []):
             mod_path = os.path.join("rcs", name, "ingame.lvl")
             shutil.copy2(mod_path, 'ingame.lvl')
@@ -441,7 +450,7 @@ def crosshair_window():
         os.remove(delete_cross)
 
 
-    def crosshair_import(root2):
+    def crosshair_import():
         crosshair = filedialog.askopenfilename(title="Select Crosshair")
         if crosshair:
 
@@ -453,7 +462,7 @@ def crosshair_window():
             os.rename(crosshair_name, "hud_bullseye.tga")
             create_crosshair_dir = os.path.join(current_dir, "crosshairs", crosshair_name_strip)
             os.makedirs(create_crosshair_dir, exist_ok=True)
-            shutil.copy2(crosshair, create_crosshair_dir)
+            shutil.copy2(crosshair, create_crosshair_dir) #copy the unmunged crosshair to the crosshair folder to use it for the preview
             subprocess.run(["tools/pc_TextureMunge.exe", "-inputfile", "hud_bullseye.tga", "-platform", "pc", "-outputdir", create_crosshair_dir, "-continue"], creationflags=subprocess.CREATE_NO_WINDOW)
             
             delete_munge_log = "pc_TextureMunge.log"
@@ -504,8 +513,9 @@ def crosshair_window():
 
             resized_img = img.resize((256, 256))
 
+            #make the backround grey and resize it so its not to small in the preview
             if resized_img.mode in ('RGBA', 'LA') or ('transparency' in resized_img.info):
-                background = Image.new("RGBA", resized_img.size, (58, 58, 58, 255)) 
+                background = Image.new("RGBA", resized_img.size, (58, 58, 58, 255))
                 background.paste(resized_img, (0, 0), resized_img) 
                 resized_img = background
 
@@ -538,7 +548,7 @@ def select_file_path(root):
         base_game_path = filedialog.askdirectory(title="Select SWBF2 Game Path")
         valid_path = os.path.join(base_game_path, "BattlefrontII.exe")
 
-        if base_game_path and os.path.isfile(valid_path):
+        if base_game_path and os.path.isfile(valid_path): #checking if the selected folder got a swbf2.exe in it to make sure the user selected the right folder
 
             os.makedirs("rcs", exist_ok=True)
             os.makedirs("og", exist_ok=True)
@@ -592,7 +602,7 @@ def set_up_window():
 
     root.mainloop()
 
-
+#skip setup window if the json file is already there
 if os.path.isfile(json_path):
     main_window()
 else:
