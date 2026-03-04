@@ -10,6 +10,8 @@ The SWBF HUD Changer is an application focused on changing the HUD of Star Wars 
 
 - Allows the user to use their own custom crosshair in-game.
 
+- Compatible with Anakins Remastered Mod.
+
 # Install
 
 1. Download the newest release [here.](https://github.com/Leonardrx/SWBF-HUD-Changer/releases)
@@ -21,6 +23,7 @@ The SWBF HUD Changer is an application focused on changing the HUD of Star Wars 
 ### Important
 1. Make sure you have no mod installed that already changes the game's HUD, it will most likely cause issues. Sleepkillers Shaderpatch is fully compatible.
 2. Applying a Crosshair without applying an HUD beforehand will not work.
+3. The Programm will automatically detect if you got Anakins Remastered Mod installed.
 
 On the first launch, select your GameData folder. This path will be saved for future use. After selecting it, press on "Change HUD." You can choose from three different HUDs:
 
@@ -36,7 +39,7 @@ You can now start your game and see if it was applied correctly.
 
 If you find yourself wanting to use a different crosshair, open up the SWBF HUD Changer and press on "Change Crosshair." Select one of the preinstalled ones and apply your desired one. You can preview them by selecting one and pressing on "Preview." 
 
-### Selecting Mod Maps
+### Selecting Mod Maps (only when not using the Remastered Mod)
 
 You may find yourself playing a mod map and seeing the HUD overlapping with the original one. That is caused by the mod map using their own ingame.lvl. 
 
