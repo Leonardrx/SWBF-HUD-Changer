@@ -21,7 +21,7 @@ The SWBF HUD Changer is an application focused on changing the HUD of Star Wars 
 # How to use
 
 ### Important
-1. Make sure you have no mod installed that already changes the game's HUD, it will most likely cause issues. Sleepkillers Shaderpatch is fully compatible.
+1. Make sure you have no mod installed that already changes the game's HUD, it will most likely cause issues. Sleepkillers Shaderpatch is fully compatible as well as Anakins Remastered Mod.
 2. Applying a Crosshair without applying an HUD beforehand will not work.
 3. The Programm will automatically detect if you got Anakins Remastered Mod installed.
 
