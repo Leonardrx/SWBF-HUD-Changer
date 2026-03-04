@@ -62,11 +62,31 @@ Note that this only works when the mod map has the ingame.lvl file under "abc/da
 
 1. Create a folder with a cool name.
 
-2. Paste your 1playerhud.hud there together with the hudtransfroms.hud if you changed it. If you added any assets (only TGA's are supported; msh´s don't work), also paste them there.
+2. Paste your 1playerhud.hud there together with the hudtransfroms.hud if you changed it and a .tga image called "hud_bullseye.tga" for the Crossahir. If you added any other assets (only TGA's are supported; msh´s don't work), also paste them there.
 
-3. Open the SWBF HUD Changer, go to "Change HUD" -> "Import HUD," and select the folder.
+3. To get the Crosshair swaping function working use exactly this code and replace it with the Group("player1bullseye") in the 1playerhud.hud file:
 
-4. This will be saved until you delete it from the listbox.
+Group("player1bullseye")
+    {
+        EventEnable("initialize")
+        PropagateAlpha(0)
+        BarBitmap("bullseye")
+        {
+            FlashyScale(1.000000)
+            Bitmap("hud_bullseye")
+            BitmapRect(0.025000, 0.025000, "Center", "Center", "Viewport")
+            Viewport(1)
+            Alpha(1)
+            ColorChangeRate(0.001000)
+            EventEnable("initialize")
+            EventColor("player1.weapon1.target.teamColorBright")
+
+        }
+    }
+
+4. Open the SWBF HUD Changer, go to "Change HUD" -> "Import HUD," and select the folder.
+
+5. This will be saved until you delete it from the listbox.
 
 Message me on Discord @herbertgarten for a more detailed explanation.
 

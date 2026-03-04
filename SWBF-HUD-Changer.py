@@ -469,52 +469,64 @@ def crosshair_window():
 
 
         cross_swap_path = os.path.join("crosshairs", lang, "hud_bullseye.texture")
-        shutil.copy2(cross_swap_path, 'hud_bullseye.texture')
 
         if rema_check == 0:
 
-            #using the rcs ingmae.lvl
-            shutil.copy2('rcs/ingame.lvl', 'ingame.lvl')
-            subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-r", "hud_bullseye.texture"], check=True,creationflags=subprocess.CREATE_NO_WINDOW)
-            shutil.copy2('ingame.lvl', game_path)
+            if os.path.isfile("rcs/ingame.lvl"):
 
-            delete_ingame = "ingame.lvl"
-            os.remove(delete_ingame)
-            gamedata_path = game_path.replace("\\data\\_lvl_pc", "")
-            addon_path = os.path.join(gamedata_path, "addon")
+                shutil.copy2(cross_swap_path, 'hud_bullseye.texture')
+                #using the rcs ingmae.lvl
+                shutil.copy2('rcs/ingame.lvl', 'ingame.lvl')
+                subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-r", "hud_bullseye.texture"], check=True,creationflags=subprocess.CREATE_NO_WINDOW)
+                shutil.copy2('ingame.lvl', game_path)
 
-            #read the selected mod maps from the json and apply the crosshair to every one of them
-            for name in json_data.get("mod_maps", []):
-                mod_path = os.path.join("rcs", name, "ingame.lvl")
-                shutil.copy2(mod_path, 'ingame.lvl')
-                subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-r", "hud_bullseye.texture"],creationflags=subprocess.CREATE_NO_WINDOW)
-                game_mod_path = os.path.join(addon_path, name, "data/_LVL_PC")
-                shutil.copy2('ingame.lvl', game_mod_path)
                 delete_ingame = "ingame.lvl"
                 os.remove(delete_ingame)
+                gamedata_path = game_path.replace("\\data\\_lvl_pc", "")
+                addon_path = os.path.join(gamedata_path, "addon")
 
-            delete_cross = "hud_bullseye.texture"
-            os.remove(delete_cross)
+                #read the selected mod maps from the json and apply the crosshair to every one of them
+                for name in json_data.get("mod_maps", []):
+                    mod_path = os.path.join("rcs", name, "ingame.lvl")
+                    shutil.copy2(mod_path, 'ingame.lvl')
+                    subprocess.run(["tools/LVLTool.exe", "-file", "ingame.lvl", "-r", "hud_bullseye.texture"],creationflags=subprocess.CREATE_NO_WINDOW)
+                    game_mod_path = os.path.join(addon_path, name, "data/_LVL_PC")
+                    shutil.copy2('ingame.lvl', game_mod_path)
+                    delete_ingame = "ingame.lvl"
+                    os.remove(delete_ingame)
+
+                delete_cross = "hud_bullseye.texture"
+                os.remove(delete_cross)
+
+            else: 
+                label2 = Label(root2, font= ("Arial", 20), text="You must apply a HUD before applying a Crosshair", bg="#333333", fg="#FF0000")
+                label2.place(relx=0.5, rely=0.92, anchor= "center")
         
         else:
 
-            gamedata = game_path.replace("\\data\\_lvl_pc", "")
-            remaster_hud_file_path = os.path.join(gamedata, "addon", "Remaster", "HUD")
+            if os.path.isfile("rcs/hud_04x03.lvl") or os.path.isfile("rcs/hud_16x09.lvl") or os.path.isfile("rcs/hud_16x10.lvl"):
 
-            rcs_dir = "rcs"
+                shutil.copy2(cross_swap_path, 'hud_bullseye.texture')
+                gamedata = game_path.replace("\\data\\_lvl_pc", "")
+                remaster_hud_file_path = os.path.join(gamedata, "addon", "Remaster", "HUD")
 
-            for file in os.listdir(rcs_dir):
+                rcs_dir = "rcs"
 
-                if not file == "paths.json":
-                    hud_ratio_path = os.path.join("rcs", file)
-                    shutil.copy2(hud_ratio_path, file)
-                    subprocess.run(["tools/LVLTool.exe", "-file", file , "-r", "hud_bullseye.texture"], check=True,creationflags=subprocess.CREATE_NO_WINDOW)
-                    shutil.copy2(file, remaster_hud_file_path)
-                    delete_hud_ratio = file
-                    os.remove(delete_hud_ratio)
+                for file in os.listdir(rcs_dir):
 
-            delete_cross = "hud_bullseye.texture"
-            os.remove(delete_cross)
+                    if not file == "paths.json":
+                        hud_ratio_path = os.path.join("rcs", file)
+                        shutil.copy2(hud_ratio_path, file)
+                        subprocess.run(["tools/LVLTool.exe", "-file", file , "-r", "hud_bullseye.texture"], check=True,creationflags=subprocess.CREATE_NO_WINDOW)
+                        shutil.copy2(file, remaster_hud_file_path)
+                        delete_hud_ratio = file
+                        os.remove(delete_hud_ratio)
+
+                delete_cross = "hud_bullseye.texture"
+                os.remove(delete_cross)
+            else: 
+                label3 = Label(root2, font= ("Arial", 20), text="You must apply a HUD before applying a Crosshair", bg="#333333", fg="#FF0000")
+                label3.place(relx=0.5, rely=0.92, anchor= "center")
 
 
     def crosshair_import():
@@ -609,75 +621,6 @@ def crosshair_window():
 
     root2.mainloop()
 
-def if_remastered_window():
-    root5 = tk.Tk()
-
-
-    root5.title("SWBF2 HUD Changer")
-
-    ws = root5.winfo_screenwidth()
-    hs = root5.winfo_screenheight() 
-
-    x = (ws/3.5)
-    y = (hs/5.4)
-
-    root5.resizable(False, False)
-
-    root5.geometry("800x600+%d+%d" % (x,y))
-    root5.configure(bg="#333333")
-
-    label = Label(root5, text="Do you use the SWBF2 Remastered Mod by Anakin?", font=("Arial", 24), bg="#333333", fg="#dadada" )
-    label.place(relx=0.5, rely=0.2, anchor="center")
-
-    def yes():
-
-        with open(json_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        
-        remaster_hud_files_path = data["game_path"]
-        gamedata = remaster_hud_files_path.replace("\\data\\_lvl_pc", "")
-        remaster_backup_path = os.path.join(gamedata, "addon", "Remaster", "HUD")
-        shutil.copytree(remaster_backup_path, 'og/', dirs_exist_ok=True)
-
-        data.pop("using_rema", None)
-
-        data["using_rema"] = 1
-
-        with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-
-        root5.destroy()
-        main_window()
-
-    def no():
-
-        with open(json_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        target_game_path = data["game_path"]
-        back_up_path = os.path.join(target_game_path, "ingame.lvl")
-        shutil.copy2(back_up_path, 'og/ingame.lvl')
-
-        data.pop("using_rema", None)
-
-        data["using_rema"] = 0
-
-        with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-
-        root5.destroy()
-        main_window()
-
-
-    button = Button(root5, text="Yes", command=yes, width= 15, height=1, font=("Arial", 20), bg="#4D4D4D", fg="#dadada",)
-    button.place(relx=0.3, rely=0.6, anchor="center")
-
-    button2 = Button(root5, text="No", command=no, width= 15, height=1, font=("Arial", 20), bg="#4D4D4D", fg="#dadada",)
-    button2.place(relx=0.7, rely=0.6, anchor="center")
-
-    root5.mainloop()
-
-
 
 def set_up_window():
 
@@ -722,8 +665,32 @@ def set_up_window():
             with open(json_path, "w") as f:
                 json.dump(json_game_path, f, indent=4)
 
+            rema_yes_no = os.path.join(base_game_path, "addon", "Remaster")
+            if os.path.isdir(rema_yes_no):
+        
+                remaster_backup_path = os.path.join(base_game_path, "addon", "Remaster", "HUD")
+                shutil.copytree(remaster_backup_path, 'og/', dirs_exist_ok=True)
+
+                json_game_path.pop("using_rema", None)
+
+                json_game_path["using_rema"] = 1
+
+                with open(json_path, "w", encoding="utf-8") as f:
+                    json.dump(json_game_path, f, indent=4)
+
+            else:
+                back_up_path = os.path.join(target_game_path, "ingame.lvl")
+                shutil.copy2(back_up_path, 'og/ingame.lvl')
+
+                json_game_path.pop("using_rema", None)
+
+                json_game_path["using_rema"] = 0
+
+                with open(json_path, "w", encoding="utf-8") as f:
+                    json.dump(json_game_path, f, indent=4)             
+
             root.destroy()          
-            if_remastered_window()
+            main_window()
             
         else: 
             label3 = Label(root, text="Ops that was the wrong folder", font=("Arial", 36), bg="#333333", fg="#ff0000" )
